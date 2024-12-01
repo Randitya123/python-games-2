@@ -6,9 +6,8 @@ class img(pygame.sprite.Sprite):
     def __init__(self,im,x,y):
         super().__init__()
         self.image=pygame.image.load(im)
-        self.x=x
-        self.y=y
         self.rect=self.image.get_rect()
+        self.rect.topleft=(x,y)
     def hormov(self,p):
         self.rect.x+=5
         if p==1:
@@ -36,8 +35,8 @@ grp=pygame.sprite.Group()
 def startgame():
     obj1=img("fb.png",575,400)
     grp.add(obj1)
-    p1=img("r.png",50,400)
-    p2=img("m.png",1110,400)
+    p1=img("r.png",50,380)
+    p2=img("m.png",950,380)
     grp.add(p1)
     grp.add(p2) 
     while True:
@@ -45,7 +44,26 @@ def startgame():
             if event.type==pygame.QUIT:
                 pygame.quit()
         pressedkeys=pygame.key.get_pressed()
+        if pressedkeys[pygame.K_w]:
+            p1.vertmov()
+        if pressedkeys[pygame.K_s]:
+            p1.vertmov()
+        if pressedkeys[pygame.K_a]:
+            p1.hormov(1)    
+        if pressedkeys[pygame.K_d]:
+            p1.hormov(1)
+        #p2 movement
+        if pressedkeys[pygame.K_i]:
+            p2.vertmov()
+        if pressedkeys[pygame.K_k]:
+            p2.vertmov()
+        if pressedkeys[pygame.K_j]:
+            p2.hormov(2)    
+        if pressedkeys[pygame.K_l]:
+            p2.hormov(2)
         obj1.update(pressedkeys)
+        p1.update(pressedkeys)
+        p2.update(pressedkeys)
         s.blit(pygame.image.load("p.png"),(0,0))
         grp.draw(s)
         pygame.display.update()
