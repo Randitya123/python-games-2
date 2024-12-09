@@ -28,8 +28,8 @@ class players(pygame.sprite.Sprite):
         super().__init__()
         self.image=image
         self.rect=self.image.get_rect()
-        self.posx=posx
-        self.posy=posy
+        self.rect.x=posx
+        self.rect.y=posy
     def hormov(self,speed,p):
         self.rect.x=speed
         if p==1:
