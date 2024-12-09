@@ -1,77 +1,56 @@
 import pygame
-pygame.init()
-s=pygame.display.set_mode((1150,800))
-pygame.display.set_caption("Put ball in net")
-point1=0
-point2=0 
-class img(pygame.sprite.Sprite):
-    def __init__(self,im,x,y):
+from pygame.locals import*
+import os
+pygame.font.init()
+pygame.mixer.init()
+s=pygame.display.set_mode((1100,600))
+pygame.display.set_caption("s p a c e")
+#colors
+c1=(150,220,60)
+c2=(75,25,150)
+c3=(34,85,99)
+c4=(99,44,101)
+bord=pygame.Rect(550,0,10,600)
+f1=pygame.font.SysFont("Cambria",50)
+f2=pygame.font.SysFont("Cambria",75)
+#variables
+vel=10
+velb=15
+h1=3
+h2=3
+rship=pygame.image.load("p1.png")
+bship=pygame.image.load("p2.png")
+bg=pygame.image.load("bg.jpg")
+def create():
+    s.blit(bg,(0,0))
+class players(pygame.sprite.Sprite):
+    def __init__(self,image,posx,posy):
         super().__init__()
-        self.image=pygame.image.load(im)
+        self.image=image
         self.rect=self.image.get_rect()
-        self.rect.topleft=(x,y)
+        self.posx=posx
+        self.posy=posy
     def hormov(self,speed,p):
-        self.rect.x+=speed
+        self.rect.x=speed
         if p==1:
-            if self.rect.left<=0:
+            if self.rect.left<=0 and self.rect>=bord.left:
                 self.rect.move_ip(-speed,0)
         if p==2:
-            if self.rect.right>=1150:
+            if self.rect.right>=1110 and self.rect<=bord.right:
                 self.rect.move_ip(-speed,0)
     def vertmov(self,speed):
-        self.rect.move_ip(0,speed)
-        if self.rect.top<=0 and self.rect.bottom>=800:
-            self.rect.move_ip(0,-speed)
-class move(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image=pygame.image.load("fb.png")
-        self.rect=self.image.get_rect()
-        self.velocity=[3,3]
-    def update(self):
-        self.rect.move_ip(self.velocity)
-        if self.rect.left<=0 or self.rect.right>=1150:
-            self.velocity[0]=-self.velocity[0]
-        if self.rect.top<=0 or self.rect.bottom>=800  :
-            self.velocity[1]=-self.velocity[1]
+        self.rect.move_ip(speed,0)
+        if self.rect.top<=0 and self.rect.bottom>=600:
+                self.rect.move_ip(0,-speed)
+r=players(rship,275,300)
+b=players(bship,825,300)
 grp=pygame.sprite.Group()
-grp2=pygame.sprite.Group()
-grp3=pygame.sprite.Group()
-def startgame():
-    b=move()
-    grp.add(b)
-    p1=img("r.png",50,380)
-    p2=img("m.png",950,380)
-    grp.add(p1)
-    grp.add(p2) 
-    while True: 
-        for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                pygame.quit()
-        pressedkeys=pygame.key.get_pressed()
-        if pressedkeys[pygame.K_w]:
-            p1.vertmov(-5)
-        if pressedkeys[pygame.K_s]:
-            p1.vertmov(5)
-        if pressedkeys[pygame.K_a]:
-            p1.hormov(-5,1)    
-        if pressedkeys[pygame.K_d]:
-            p1.hormov(5,1)
-        #p2 movement
-        if pressedkeys[pygame.K_i]:
-            p2.vertmov(-5)
-        if pressedkeys[pygame.K_k]:
-            p2.vertmov(5)
-        if pressedkeys[pygame.K_j]:
-            p2.hormov(-5,2)    
-        if pressedkeys[pygame.K_l]:
-            p2.hormov(5,2)
-
-        grp.update()
-        p1.update(pressedkeys)
-        p2.update(pressedkeys)
-        s.blit(pygame.image.load("p.png"),(0,0))
-        col=pygame.sprite.grp()
-        grp.draw(s)
-        pygame.display.update()
-startgame()
+grp.add(r)
+grp.add(b)
+while True: 
+    for event in pygame.event.get():
+        if event.type==QUIT:
+            pygame.quit()
+    create()
+    grp.draw(s)
+    pygame.display.update()
