@@ -23,6 +23,36 @@ bship=pygame.image.load("p2.png")
 bg=pygame.image.load("bg.jpg")
 def create():
     s.blit(bg,(0,0))
+    pygame.draw.rect(s,c1,bord)
+    hr=f1.render("HEALTH:"+str(h1),1,c2)
+    hb=f1.render("HEALTH:"+str(h2),1,c2)
+    s.blit(hr,(15,15))
+    s.blit(hb,(875,15))
+l1=[]
+l2=[]
+def drawb():
+    for i in l1:
+        pygame.draw.rect(s,c3,i)
+        i.x+=velb
+    for d in l2:
+        pygame.draw.rect(s,c3,d)
+        d.x-=velb
+redhit=pygame.USEREVENT+1
+bluehit=pygame.USEREVENT+2
+def handleb():
+    global h1, h2
+    for bullet in l1:
+        if r.rect.colliderect(bullet):
+            h1-=1
+            l1.remove(bullet)
+        elif bullet.x<0:
+            l1.remove(bullet)
+    for bullet in l2:
+        if b.rect.colliderect(bullet):
+            h2-=1
+            l2.remove(bullet)
+        elif bullet.x>1100:
+            l2.remove(bullet)
 class players(pygame.sprite.Sprite):
     def __init__(self,image,posx,posy):
         super().__init__()
@@ -31,16 +61,16 @@ class players(pygame.sprite.Sprite):
         self.rect.x=posx
         self.rect.y=posy
     def hormov(self,speed,p):
-        self.rect.x=speed
+        self.rect.x+=speed
         if p==1:
-            if self.rect.left<=0 and self.rect.right>=bord.left:
+            if self.rect.left<=0 or self.rect.right>=bord.left:
                 self.rect.move_ip(-speed,0)
         if p==2:
-            if self.rect.right>=1110 and self.rect.left<=bord.right:
+            if self.rect.right>=1110 or self.rect.left<=bord.right:
                 self.rect.move_ip(-speed,0)
     def vertmov(self,speed):
         self.rect.move_ip(0,speed)
-        if self.rect.top<=0 and self.rect.bottom>=600:
+        if self.rect.top<=0 or self.rect.bottom>=600:
                 self.rect.move_ip(0,-speed)
 r=players(rship,275,300)
 b=players(bship,825,300)
@@ -53,22 +83,22 @@ while True:
             pygame.quit()
     key=pygame.key.get_pressed()
     if key[K_w]:
-        r.vertmov(-3)
+        r.vertmov(-1)
     if key[K_s]:
-        r.vertmov(3)
+        r.vertmov(1)
     if key[K_a]:
-        r.hormov(-3,1)
+        r.hormov(-1,1)
     if key[K_d]:
-        r.hormov(3,1)
+        r.hormov(1,1)
 
-    if key[K_UP]:
-        b.vertmov(-3)
-    if key[K_DOWN]:
-        b.vertmov(3)
-    if key[K_LEFT]:
-        b.hormov(-3,2)
-    if key[K_RIGHT]:
-        b.hormov(3,2)
+    if key[K_i]:
+        b.vertmov(-1)
+    if key[K_k]:
+        b.vertmov(1)
+    if key[K_j]:
+        b.hormov(-1,2)
+    if key[K_l]:
+        b.hormov(1,2)
     create()
     grp.draw(s)
     pygame.display.update()
