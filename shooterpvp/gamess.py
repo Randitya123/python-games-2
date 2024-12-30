@@ -50,6 +50,7 @@ def handleb():
             l1.remove(bullet)
     for bullet in l2:
         if b.rect.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(redhit))
             h2-=1
             l2.remove(bullet)
             break
