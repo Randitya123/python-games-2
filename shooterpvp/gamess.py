@@ -45,12 +45,14 @@ def handleb():
         if r.rect.colliderect(bullet):
             h1-=1
             l1.remove(bullet)
+            break
         elif bullet.x<0:
             l1.remove(bullet)
     for bullet in l2:
         if b.rect.colliderect(bullet):
             h2-=1
             l2.remove(bullet)
+            break
         elif bullet.x>1100:
             l2.remove(bullet)
     for bullet in l1:
@@ -91,8 +93,12 @@ while True:
                 bullet=pygame.Rect(r.rect.x+r.rect.width,r.rect.y+r.rect.height//2,25,25)
                 l1.append(bullet)
             if event.key==K_RCTRL:
-                bullet=pygame.Rect(b.rect.x,b.rect.y+b.rect.y+b.rect.height/2,25,25)
-                l1.append(bullet)    
+                bullet=pygame.Rect(b.rect.x,b.rect.y+b.rect.y+b.rect.height,25,25)
+                l2.append(bullet)   
+        if event.type==redhit:
+            h1-=1
+        if event.type==bluehit:
+            h2-=1
     key=pygame.key.get_pressed()
     if key[K_w]:
         r.vertmov(-1)
