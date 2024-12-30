@@ -8,14 +8,14 @@ pygame.display.set_caption("s p a c e")
 #colors
 c1=(150,220,60)
 c2=(75,25,150)
-c3=(34,85,99)
+c3=(255,255,255)
 c4=(99,44,101)
 bord=pygame.Rect(550,0,10,600)
 f1=pygame.font.SysFont("Cambria",50)
 f2=pygame.font.SysFont("Cambria",75)
 #variables
 vel=10
-velb=15
+velb=5
 h1=3
 h2=3
 rship=pygame.image.load("p1.png")
@@ -53,6 +53,11 @@ def handleb():
             l2.remove(bullet)
         elif bullet.x>1100:
             l2.remove(bullet)
+    for bullet in l1:
+        for bullett in l2:
+            if bullet.colliderect(bullett):
+                l1.remove(bullet)
+                l2.remove(bullett)
 class players(pygame.sprite.Sprite):
     def __init__(self,image,posx,posy):
         super().__init__()
@@ -81,6 +86,13 @@ while True:
     for event in pygame.event.get():
         if event.type==QUIT:
             pygame.quit()
+        if event.type==KEYDOWN:
+            if event.key==K_LCTRL:
+                bullet=pygame.Rect(r.rect.x+r.rect.width,r.rect.y+r.rect.height//2,25,25)
+                l1.append(bullet)
+            if event.key==K_RCTRL:
+                bullet=pygame.Rect(b.rect.x,b.rect.y+b.rect.y+b.rect.height/2,25,25)
+                l1.append(bullet)    
     key=pygame.key.get_pressed()
     if key[K_w]:
         r.vertmov(-1)
@@ -101,4 +113,6 @@ while True:
         b.hormov(1,2)
     create()
     grp.draw(s)
+    drawb()
+    handleb()
     pygame.display.update()
