@@ -41,21 +41,21 @@ redhit=pygame.USEREVENT+1
 bluehit=pygame.USEREVENT+2
 def handleb():
     global h1, h2
-    for bullet in l1:
+    for bullet in l2:
         if r.rect.colliderect(bullet):
             h1-=1
-            l1.remove(bullet)
+            l2.remove(bullet)
             break
         elif bullet.x<0:
-            l1.remove(bullet)
-    for bullet in l2:
-        if b.rect.colliderect(bullet):
-            pygame.event.post(pygame.event.Event(redhit))
-            h2-=1
             l2.remove(bullet)
+    for bullet in l1:
+        if b.rect.colliderect(bullet):
+            #pygame.event.post(pygame.event.Event(redhit))
+            h2-=1
+            l1.remove(bullet)
             break
         elif bullet.x>1100:
-            l2.remove(bullet)
+            l1.remove(bullet)
     for bullet in l1:
         for bullett in l2:
             if bullet.colliderect(bullett):
@@ -85,6 +85,11 @@ b=players(bship,825,300)
 grp=pygame.sprite.Group()
 grp.add(r)
 grp.add(b)
+def draww(text):
+    text1=f2.render(text,1,"White")
+    s.blit(text1,(450,300))
+    pygame.display.update()
+    pygame.time.delay(5000)
 while True: 
     for event in pygame.event.get():
         if event.type==QUIT:
@@ -94,7 +99,7 @@ while True:
                 bullet=pygame.Rect(r.rect.x+r.rect.width,r.rect.y+r.rect.height//2,25,25)
                 l1.append(bullet)
             if event.key==K_RCTRL:
-                bullet=pygame.Rect(b.rect.x,b.rect.y+b.rect.y+b.rect.height,25,25)
+                bullet=pygame.Rect(b.rect.x,b.rect.y+b.rect.height//2,25,25)
                 l2.append(bullet)   
         if event.type==redhit:
             h1-=1
@@ -122,4 +127,11 @@ while True:
     grp.draw(s)
     drawb()
     handleb()
+    if h1==0:
+        draww("P2 won!")
+        run=False
+    if h2==0:
+        draww("P1 won!")
+        run=False
+
     pygame.display.update()
