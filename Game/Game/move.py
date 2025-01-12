@@ -46,11 +46,7 @@ def startgame():
     grp.add(p1)
     grp.add(p2) 
 
-    if p1.rect.colliderect(b):
-       b.velocity[0]=-b.velocity[0]
-    if p2.rect.colliderect(b):
-       b.velocity[0]=-b.velocity[0]
-
+    
     while True: 
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -74,6 +70,11 @@ def startgame():
         if pressedkeys[pygame.K_l]:
             p2.hormov(5,2)
         grp.update()
+        if p1.rect.colliderect(b):
+            b.velocity[0]=-b.velocity[0]
+        if p2.rect.colliderect(b):
+            b.velocity[0]=-b.velocity[0]
+
         p1.update(pressedkeys)
         p2.update(pressedkeys)
         s.blit(pygame.image.load("p.png"),(0,0))
