@@ -140,7 +140,7 @@ while run:
             gscroll=0
     if gameo==True:
         if obj1.draw():
-            gameo==False
+            gameo=False
             score=reset()
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
