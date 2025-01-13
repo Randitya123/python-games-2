@@ -16,7 +16,7 @@ fpipe=1000
 fly=False
 lastpipe=pygame.time.get_ticks()-fpipe
 gameo=False
-pipegap=100
+pipegap=200
 score=0
 passp=False
 clock=pygame.time.Clock()
@@ -24,6 +24,9 @@ clock=pygame.time.Clock()
 bg=pygame.image.load("img/bg.png")
 ground=pygame.image.load("img/ground.png")
 restart=pygame.image.load("img/restart.png")
+def text(texts,font,clr,x,y):
+    tx=f1.render(texts,True, clr)
+    s.blit(tx,(x,y))
 
 class bird(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -75,9 +78,30 @@ class pipe(pygame.sprite.Sprite):
         self.rect.x-=scrolls
         if self.rect.right<0:
             self.kill()
+class button():
+    def __init__(self,x,y,img):
+        self.img=img
+        self.rect=self.img.get_rect()
+        self.rect.topleft=(x,y)
+    def draw(self):
+        action=False
+        #getting mouse pos
+        pos=pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0]==1:
+                action=True
+        s.blit(self.img,(self.rect.x,self.rect.y))
+        return action
+def reset():
+    pipegrp.empty()
+    objb.rect.x=100
+    objb.rect.y=100
+    score=0
+    return score
 pipegrp=pygame.sprite.Group()
 birdgrp=pygame.sprite.Group()
 objb=bird(100,100)
+obj1=button(100,100,restart)
 birdgrp.add(objb)
 run=True
 while run:
@@ -86,6 +110,21 @@ while run:
     birdgrp.draw(s)
     pipegrp.draw(s)
     birdgrp.update()
+    #checking the score
+    if len(pipegrp)>0:
+        if birdgrp.sprites()[0].rect.left>pipegrp.sprites()[0].rect.left\
+            and birdgrp.sprites()[0].rect.right>pipegrp.sprites()[0].rect.right\
+            and passp==False:
+            passp=True
+        if passp==True:
+            if birdgrp.sprites()[0].rect.left>pipegrp.sprites()[0].rect.right:
+                score+=1
+                passp=False
+    text(str(score),f1,c1,200,200)
+    #collison with pipe
+    if pygame.sprite.groupcollide(birdgrp,pipegrp,False,False):
+        gameo=True
+        fly=False
     if fly==True and gameo==False:
         timer=pygame.time.get_ticks()
         if timer-lastpipe>fpipe:
@@ -99,11 +138,14 @@ while run:
         gscroll-=scrolls
         if abs(gscroll)>40:
             gscroll=0
+    if gameo==True:
+        if obj1.draw():
+            gameo==False
+            score=reset()
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             run=False
         if event.type==pygame.MOUSEBUTTONDOWN and fly==False and gameo==False:
             fly=True
-    
     pygame.display.update()
 pygame.quit()
