@@ -8,9 +8,12 @@ score=0
 timer=time.time()
 clock=pygame.time.Clock()
 f1=pygame.font.SysFont("Times New Roman",25)
+f2=pygame.font.SysFont("Arial",15)
 holdf=f1.render("Score:"+str(score),True,"black")
 
 bg=pygame.image.load("bg.jpg")
+win=pygame.image.load("win.jpg")
+loose=pygame.image.load("loose.jpg")
 class bin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -49,21 +52,34 @@ while run:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             run=False
-    keypressed=pygame.key.get_pressed()
-    if keypressed[K_w]:
-        obj1.rect.y-=5
-    if keypressed[K_s]:
-        obj1.rect.y+=5
-    if keypressed[K_a]:
-        obj1.rect.x-=5
-    if keypressed[K_d]:
-        obj1.rect.x+=5
-    recyclecollide=pygame.sprite.spritecollide(obj1,recyclablegrp,True)
-    for i in recyclecollide:
-        score+=1
-        holdf=f1.render("Score:"+str(score),True,"black")
-    s.blit(bg,(0,0))
-    s.blit(holdf,(0,0))
-    grp.draw(s)
+    totaltime=time.time()-timer
+    textrender=f2.render("Timer:"+str(int(totaltime)),True,"Black")
+    if totaltime>=41:
+        if score>=15:
+            s.blit(win,(0,0))
+        else:
+            s.blit(loose,(0,0))
+    else:
+        keypressed=pygame.key.get_pressed()
+        if keypressed[K_w]:
+            obj1.rect.y-=5
+        if keypressed[K_s]:
+            obj1.rect.y+=5
+        if keypressed[K_a]:
+            obj1.rect.x-=5
+        if keypressed[K_d]:
+            obj1.rect.x+=5
+        recyclecollide=pygame.sprite.spritecollide(obj1,recyclablegrp,True)
+        nonrecyclecollide=pygame.sprite.spritecollide(obj1,nonrecyclablegrp,True)
+        for i in nonrecyclecollide:
+            score-=1
+            holdf=f1.render("Score:"+str(score),True,"black")
+        for i in recyclecollide:
+            score+=1
+            holdf=f1.render("Score:"+str(score),True,"black")
+        s.blit(bg,(0,0))
+        s.blit(textrender,(1000,0))
+        s.blit(holdf,(0,0))
+        grp.draw(s)
     pygame.display.update()
 pygame.quit()
